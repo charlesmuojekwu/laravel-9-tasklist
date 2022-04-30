@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/todos', [TodoController::class, 'index'])->name('todos.index');
+Route::get('/todos/create', [TodoController::class, 'create']);
+Route::post('/todos/create', [TodoController::class, 'store']);
+Route::get('/todos/{todo}/edit', [TodoController::class, 'edit']);
+Route::patch('/todos/{todo}/update', [TodoController::class, 'update'])->name('todo.update');
 
 Route::get('/', function () {
     return view('welcome');
