@@ -8,12 +8,23 @@
     </div>
    
         <ul class="py-5" >
+            <x-alert />
             @foreach ($todos as $todo )
                 <li class="flex justify-between p-2">
                     <p>{{ $todo->title }}</p>
                     <div>
                         <a href="{{'/todos/'.$todo->id.'/edit' }}" class="rounded py-1 px-1 bg-pink-400 cursor-pointer text-white "> Edit</a>
-                        <span class="fas fa-check" />
+                        
+                        @if ($todo->completed)
+                            <span class="fas fa-check px-2 text-green-400 cursor-pointer" />
+                        @else
+                            <span onclick="event.preventDefault(); document.getElementById('form-complete-{{ $todo->id }}').submit()" class="fas fa-check px-2 text-gray-300 cursor-pointer" />
+                            <form id="{{ 'form-complete-'.$todo->id }}" action="{{ route('todo.complete',$todo->id) }}" style="display:none" method="post">
+                                @method('put')
+                                @csrf
+                            </form>
+                        @endif
+                        
                     </div>
                 </li>
             @endforeach
