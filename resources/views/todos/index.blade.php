@@ -43,24 +43,31 @@
                         
                     </div>
                 </li>
+
+
+                {{-- SHOW STEP ASSIGNED TO TASK --}}
+                <div class="py-2">
+                    
+                    @if ($todo->steps->count() > 0)
+                    
+                    <h4>Steps</h4>
+
+                        @foreach ($todo->steps as $step )
+                            <p>{{ $step->name }}</p>
+                        @endforeach
+
+                    @endif
+                </div>
+               
             @empty   
 
                     <p>No Task Available Create One</p>
 
             @endforelse
+
+            
         </ul>
-        <form action="">
-      
-
-            @livewire('step')
-
-            {{-- <livewire:step />  --}}
-
-
-            <div class="py-1">
-                <button class="p-2 border rounded">Create</button>
-            </div>
-        </form>
+        
 
         
 @endsection

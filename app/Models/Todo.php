@@ -13,4 +13,9 @@ class Todo extends Model
         'title',
         'completed'
     ];
+
+    public function steps()
+    {
+        return $this->hasMany(Step::class);
+    }
 }

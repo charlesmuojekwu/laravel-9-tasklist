@@ -10,6 +10,12 @@
         @method('PATCH')
         @csrf
         <input type="text" name="title" class="py-2 px-2 border" value="{{ $todo->title }}">
+
+
+         {{-- <livewire:step />  --}}
+         @livewire('editstep',['steps' => $todo->steps])
+
+
         <button class="py-2 border rounded">Update</button>
     </form>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoCreateRequest;
+use App\Models\Step;
 use App\Models\Todo;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,8 @@ class TodoController extends Controller
 
     public function index()
     {
+
+        /// save using eloquent relationship
         $todos = auth()->user()->todos()->orderBy('completed')->get();
         //$todos = Todo::orderBy('completed')->get();
 
@@ -35,7 +38,15 @@ class TodoController extends Controller
 
     public function store(TodoCreateRequest $request)
     {
-        auth()->user()->todos()->create($request->all());
+       
+        /// save using eloquent relationship
+        $todo = auth()->user()->todos()->create($request->all());
+        if($request->steps){
+            foreach($request->steps as $step) 
+            {
+                $todo->steps()->create(['name' => $step]);
+            }
+        }
         //Todo::create($request->all());
 
         return redirect(route('todo.index'))->with('message', 'Todo Created successfully');
@@ -51,6 +62,20 @@ class TodoController extends Controller
     public function update(TodoCreateRequest $request, TODO $todo)
     {
         $todo->update(['title' => $request->title]);
+
+        if($request->steps){
+            foreach($request->steps as $key => $value) 
+            {
+                $id = $request->stepId[$key];
+                if(!$id){
+                    $todo->steps()->create(['name' => $value]);
+                }else{
+                    $step = Step::find($id);
+                    $step->update(['name' => $value]);
+                }
+               
+            }
+        }
        
         return redirect(route('todo.index'))->with('message', 'Updated');
     }
@@ -64,6 +89,9 @@ class TodoController extends Controller
 
     public function delete(TODO $todo)
     {
+        // DELETE CASCADE
+        $todo->steps->each->delete();
+
         $todo->delete();
        
         return redirect(route('todo.index'))->with('message', 'Task Deleted');
