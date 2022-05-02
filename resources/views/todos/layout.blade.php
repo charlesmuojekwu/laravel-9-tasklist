@@ -6,6 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    {{-- LIVEWIRE STYLES --}}
+    @livewireStyles
+
     <title>TODOS</title>
 </head>
 <body>
@@ -16,5 +20,8 @@
         </div>
 
     </div>
+
+    {{-- LIVEWIRE SCRIPT --}}
+    @livewireScripts
 </body>
 </html>

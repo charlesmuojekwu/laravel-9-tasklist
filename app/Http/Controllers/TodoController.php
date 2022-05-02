@@ -8,9 +8,20 @@ use Illuminate\Http\Request;
 
 class TodoController extends Controller
 {
+
+    public function __construct()
+    {
+        //$this->middleware('auth')->except('index');
+
+        //$this->middleware('auth')->only(['create','edit']);
+
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        $todos = Todo::orderBy('completed')->get();
+        $todos = auth()->user()->todos()->orderBy('completed')->get();
+        //$todos = Todo::orderBy('completed')->get();
 
         return view('todos.index')->with(['todos' => $todos]);
     }
@@ -24,10 +35,10 @@ class TodoController extends Controller
 
     public function store(TodoCreateRequest $request)
     {
-    
-        Todo::create($request->all());
+        auth()->user()->todos()->create($request->all());
+        //Todo::create($request->all());
 
-        return redirect()->back()->with('message', 'Todo Created successfully');
+        return redirect(route('todo.index'))->with('message', 'Todo Created successfully');
     }
 
     /// used route model binding
@@ -49,6 +60,13 @@ class TodoController extends Controller
         $todo->update(['completed' => true]);
        
         return redirect(route('todo.index'))->with('message', 'Task Marked as completed');
+    }
+
+    public function delete(TODO $todo)
+    {
+        $todo->delete();
+       
+        return redirect(route('todo.index'))->with('message', 'Task Deleted');
     }
 
 }

@@ -9,26 +9,58 @@
    
         <ul class="py-5" >
             <x-alert />
-            @foreach ($todos as $todo )
+            @forelse ($todos as $todo )
                 <li class="flex justify-between p-2">
                     <p>{{ $todo->title }}</p>
                     <div>
-                        <a href="{{'/todos/'.$todo->id.'/edit' }}" class="rounded py-1 px-1 bg-pink-400 cursor-pointer text-white "> Edit</a>
+                       
                         
                         @if ($todo->completed)
                             <span class="fas fa-check px-2 text-green-400 cursor-pointer" />
                         @else
-                            <span onclick="event.preventDefault(); document.getElementById('form-complete-{{ $todo->id }}').submit()" class="fas fa-check px-2 text-gray-300 cursor-pointer" />
+                            <span onclick="event.preventDefault(); 
+                                            document.getElementById('form-complete-{{ $todo->id }}').submit()" 
+                                            class="fas fa-check px-2 text-gray-300 cursor-pointer"
+                            />
                             <form id="{{ 'form-complete-'.$todo->id }}" action="{{ route('todo.complete',$todo->id) }}" style="display:none" method="post">
                                 @method('put')
                                 @csrf
                             </form>
                         @endif
+
+                        <a href="{{'/todos/'.$todo->id.'/edit' }}" class="rounded py-1 px-1 bg-pink-400 cursor-pointer text-white "> Edit</a>
+
+                        <span onclick="event.preventDefault(); 
+                                            if(confirm('Are you sure you want to delete')){
+                                                document.getElementById('form-delete-{{ $todo->id }}').submit()
+                                            }" 
+                                            class="fas fa-trash px-2 text-red-300 cursor-pointer"
+                            />
+                            <form id="{{ 'form-delete-'.$todo->id }}" action="{{ route('todo.delete',$todo->id) }}" style="display:none" method="post">
+                                @method('delete')
+                                @csrf
+                            </form>
                         
                     </div>
                 </li>
-            @endforeach
+            @empty   
+
+                    <p>No Task Available Create One</p>
+
+            @endforelse
         </ul>
+        <form action="">
+      
+
+            @livewire('step')
+
+            {{-- <livewire:step />  --}}
 
 
+            <div class="py-1">
+                <button class="p-2 border rounded">Create</button>
+            </div>
+        </form>
+
+        
 @endsection
